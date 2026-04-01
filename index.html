@@ -28,7 +28,31 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
+            position: relative;
         }
+
+        /* --- MOBILE HEADER & OVERLAY --- */
+        .mobile-header {
+            display: none; /* Hidden on desktop */
+            justify-content: space-between;
+            align-items: center;
+            background: #111;
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--primary);
+            z-index: 15;
+        }
+        .mobile-header h2 { font-size: 18px; color: white; text-transform: uppercase; letter-spacing: 1px; }
+        .hamburger-btn {
+            background: none; border: none; color: var(--primary);
+            font-size: 24px; cursor: pointer;
+        }
+        .menu-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6);
+            z-index: 18; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .menu-overlay.active { display: block; opacity: 1; }
 
         /* --- TABLE OF CONTENTS (SIDEBAR) --- */
         .toc {
@@ -38,54 +62,41 @@
             display: flex;
             flex-direction: column;
             border-right: 1px solid #333;
-            z-index: 10;
+            z-index: 20;
+            transition: transform 0.3s ease;
         }
-        .toc-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+        .toc-header { text-align: center; margin-bottom: 40px; position: relative; }
         .toc-header i { font-size: 40px; color: var(--primary); margin-bottom: 10px; }
         .toc-header h2 { font-size: 24px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
         .toc-header p { color: #888; font-size: 12px; letter-spacing: 1px; }
 
+        .close-menu-btn {
+            display: none; position: absolute;
+            top: -20px; right: 0; background: none; border: none;
+            color: #888; font-size: 24px; cursor: pointer;
+        }
+
         .chapter-link {
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: #aaa;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; cursor: pointer;
+            color: #aaa; font-weight: 600; transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 15px;
         }
         .chapter-link:hover { background: #222; color: white; }
         .chapter-link.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(232, 126, 53, 0.4); }
 
         /* --- PAGES AREA --- */
         .pages-container {
-            flex-grow: 1;
-            position: relative;
-            background: var(--bg-light);
-            color: var(--text-dark);
+            flex-grow: 1; position: relative;
+            background: var(--bg-light); color: var(--text-dark);
+            height: 100vh;
         }
 
         .page {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            padding: 60px 80px;
-            overflow-y: auto;
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 60px 80px; overflow-y: auto; opacity: 0; transform: translateY(20px);
+            pointer-events: none; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .page.active {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
-        }
+        .page.active { opacity: 1; transform: translateY(0); pointer-events: all; }
 
         /* --- TYPOGRAPHY & ELEMENTS --- */
         .page-title { font-size: 48px; font-weight: 800; color: #111; margin-bottom: 20px; line-height: 1.2; }
@@ -93,66 +104,70 @@
         .content-text { font-size: 18px; line-height: 1.6; color: #444; margin-bottom: 30px; }
 
         /* --- INTERACTIVE GRIDS --- */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-            transition: transform 0.3s;
-        }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .feature-card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee; transition: transform 0.3s; }
         .feature-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .feature-icon {
-            width: 60px; height: 60px;
-            border-radius: 12px;
-            background: #fff3e0;
-            color: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; margin-bottom: 20px;
-        }
+        .feature-icon { width: 60px; height: 60px; border-radius: 12px; background: #fff3e0; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
         .feature-card h3 { font-size: 22px; margin-bottom: 15px; color: #111; }
         .feature-card p { font-size: 15px; color: #666; line-height: 1.6; }
 
         /* --- INTERACTIVE DEMO UI --- */
-        .demo-box {
-            background: #1e293b;
-            border-radius: 16px;
-            padding: 40px;
-            color: white;
-            margin-top: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        .fraud-alert {
-            background: #ffebee;
-            border-left: 5px solid var(--danger);
-            padding: 20px;
-            border-radius: 0 8px 8px 0;
-            color: var(--danger);
-            margin-bottom: 20px;
-        }
+        .demo-box { background: #1e293b; border-radius: 16px; padding: 40px; color: white; margin-top: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .fraud-alert { background: #ffebee; border-left: 5px solid var(--danger); padding: 20px; border-radius: 0 8px 8px 0; color: var(--danger); margin-bottom: 20px; }
+
+        .workflow-container { display: flex; gap: 40px; align-items: center; margin-top: 40px; }
+        .workflow-steps { flex: 1; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .workflow-visual { flex: 1; text-align: center; }
 
         /* Buttons */
-        .btn-main {
-            background: var(--primary); color: white; border: none; padding: 15px 30px;
-            font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
-            transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;
-        }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
         .btn-main:hover { background: var(--primary-dark); box-shadow: 0 10px 20px rgba(232, 126, 53, 0.3); }
 
+        /* =========================================
+           RESPONSIVE DESIGN (MOBILE & TABLET)
+           ========================================= */
+        @media (max-width: 768px) {
+            .book-container { flex-direction: column; }
+            .mobile-header { display: flex; }
+            
+            /* Sidebar behaves like a drawer */
+            .toc { 
+                position: fixed; top: 0; left: 0; height: 100vh; 
+                transform: translateX(-100%); /* Hidden by default */
+            }
+            .toc.open { transform: translateX(0); /* Slide in */ }
+            .close-menu-btn { display: block; }
+            
+            .pages-container { height: calc(100vh - 60px); /* Adjust for header height */ }
+            .page { padding: 40px 20px; } /* Reduce padding */
+            
+            /* Typography adjustments */
+            .page-title { font-size: 36px; }
+            .page-subtitle { font-size: 16px; margin-bottom: 20px; }
+            .content-text { font-size: 16px; }
+            
+            /* Layout adjustments */
+            .workflow-container { flex-direction: column; }
+            .demo-box { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="book-container">
     
+    <div class="mobile-header">
+        <h2>Smiiso Tech</h2>
+        <button class="hamburger-btn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+
     <div class="toc">
         <div class="toc-header">
+            <button class="close-menu-btn" onclick="toggleMenu()"><i class="fas fa-times"></i></button>
             <h2>Smiiso Tech Solutions</h2>
             <p>PRESENTS FLEETTRACK</p>
         </div>
@@ -258,8 +273,8 @@
                 A system is only as good as the data entered into it. We made the driver experience completely frictionless.
             </p>
             
-            <div style="display: flex; gap: 40px; align-items: center; margin-top: 40px;">
-                <div style="flex: 1; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <div class="workflow-container">
+                <div class="workflow-steps">
                     <h3 style="margin-bottom: 20px; color: var(--accent);"><i class="fas fa-list-ol"></i> The Workflow</h3>
                     <ol style="line-height: 2.5; font-size: 18px; color: #444; padding-left: 20px; font-weight: 500;">
                         <li><strong>Scan:</strong> Driver scans QR code on truck.</li>
@@ -269,7 +284,7 @@
                         <li><strong>Finish:</strong> End shift and generate digital logbook.</li>
                     </ol>
                 </div>
-                <div style="flex: 1; text-align: center;">
+                <div class="workflow-visual">
                     <i class="fas fa-qrcode" style="font-size: 150px; color: #111; opacity: 0.1;"></i>
                     <h2 style="margin-top: 20px; color: #111;">Zero Paperwork.</h2>
                     <p style="color: #666; margin-top: 10px;">Export fully compliant PDF Logbooks with one click.</p>
@@ -294,17 +309,36 @@
 </div>
 
 <script>
-    // Simple JavaScript to handle the "Page Turning" interactivity
+    // Handles Opening and Closing the Mobile Menu
+    function toggleMenu() {
+        const toc = document.querySelector('.toc');
+        const overlay = document.querySelector('.menu-overlay');
+        
+        toc.classList.toggle('open');
+        
+        if(toc.classList.contains('open')) {
+            overlay.classList.add('active');
+        } else {
+            overlay.classList.remove('active');
+        }
+    }
+
+    // Handles the "Page Turning" interactivity
     function turnPage(pageIndex) {
         // 1. Update Sidebar Active State
         const links = document.querySelectorAll('.chapter-link');
         links.forEach(link => link.classList.remove('active'));
         links[pageIndex].classList.add('active');
 
-        // 2. Update Pages Active State (Fade/Slide Animation)
+        // 2. Update Pages Active State
         const pages = document.querySelectorAll('.page');
         pages.forEach(page => page.classList.remove('active'));
         document.getElementById(`page-${pageIndex}`).classList.add('active');
+
+        // 3. If on mobile, auto-close the menu after clicking a link
+        if (window.innerWidth <= 768) {
+            toggleMenu();
+        }
     }
 </script>
 
