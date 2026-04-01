@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleetTrack - The Ultimate Fleet Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- BRAND VARIABLES --- */
+        :root {
+            --primary: #e87e35;
+            --primary-dark: #d65a18;
+            --accent: #2962ff;
+            --bg-light: #f4f6f8;
+            --text-dark: #1a1a1a;
+            --text-grey: #6c757d;
+            --success: #00c853;
+            --danger: #d32f2f;
+        }
+
+        /* --- GLOBAL STYLES --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: white; overflow-x: hidden; }
+        
+        /* --- BOOK LAYOUT --- */
+        .book-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* --- TABLE OF CONTENTS (SIDEBAR) --- */
+        .toc {
+            width: 300px;
+            background: #111;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #333;
+            z-index: 10;
+        }
+        .toc-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .toc-header i { font-size: 40px; color: var(--primary); margin-bottom: 10px; }
+        .toc-header h2 { font-size: 24px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+        .toc-header p { color: #888; font-size: 12px; letter-spacing: 1px; }
+
+        .chapter-link {
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #aaa;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .chapter-link:hover { background: #222; color: white; }
+        .chapter-link.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(232, 126, 53, 0.4); }
+
+        /* --- PAGES AREA --- */
+        .pages-container {
+            flex-grow: 1;
+            position: relative;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .page {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 60px 80px;
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .page.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        /* --- TYPOGRAPHY & ELEMENTS --- */
+        .page-title { font-size: 48px; font-weight: 800; color: #111; margin-bottom: 20px; line-height: 1.2; }
+        .page-subtitle { font-size: 20px; color: var(--primary); font-weight: 600; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px; }
+        .content-text { font-size: 18px; line-height: 1.6; color: #444; margin-bottom: 30px; }
+
+        /* --- INTERACTIVE GRIDS --- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transition: transform 0.3s;
+        }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .feature-icon {
+            width: 60px; height: 60px;
+            border-radius: 12px;
+            background: #fff3e0;
+            color: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; margin-bottom: 20px;
+        }
+        .feature-card h3 { font-size: 22px; margin-bottom: 15px; color: #111; }
+        .feature-card p { font-size: 15px; color: #666; line-height: 1.6; }
+
+        /* --- INTERACTIVE DEMO UI --- */
+        .demo-box {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 40px;
+            color: white;
+            margin-top: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .fraud-alert {
+            background: #ffebee;
+            border-left: 5px solid var(--danger);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            color: var(--danger);
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .btn-main {
+            background: var(--primary); color: white; border: none; padding: 15px 30px;
+            font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
+            transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;
+        }
+        .btn-main:hover { background: var(--primary-dark); box-shadow: 0 10px 20px rgba(232, 126, 53, 0.3); }
+
+    </style>
+</head>
+<body>
+
+<div class="book-container">
+    
+    <div class="toc">
+        <div class="toc-header">
+            <h2>Smiiso Tech Solutions</h2>
+            <p>PRESENTS FLEETTRACK</p>
+        </div>
+        <div class="chapter-link active" onclick="turnPage(0)">
+            <i class="fas fa-book-open"></i> Introduction
+        </div>
+        <div class="chapter-link" onclick="turnPage(1)">
+            <i class="fas fa-shield-alt"></i> Security & Fraud
+        </div>
+        <div class="chapter-link" onclick="turnPage(2)">
+            <i class="fas fa-chart-line"></i> Business Intelligence
+        </div>
+        <div class="chapter-link" onclick="turnPage(3)">
+            <i class="fas fa-mobile-alt"></i> The Driver App
+        </div>
+        <div class="chapter-link" onclick="turnPage(4)">
+            <i class="fas fa-rocket"></i> Get Started
+        </div>
+    </div>
+
+    <div class="pages-container">
+        
+        <div class="page active" id="page-0">
+            <h1 class="page-title">Stop Managing.<br>Start Commanding.</h1>
+            <div class="page-subtitle">Welcome to FleetTrack</div>
+            <p class="content-text">
+                FleetTrack isn't just a digital logbook. It is a comprehensive, military-grade mission control center designed to completely eliminate paper, optimize vehicle lifespans, and brutally cut down on operational theft.
+            </p>
+            <p class="content-text">
+                Designed for scale, FleetTrack connects your Drivers, your Mechanics, and your Executive Suite into one seamless, real-time ecosystem.
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-qrcode"></i></div>
+                    <h3>QR-Code Dispatch</h3>
+                    <p>Drivers scan a physical QR code on the vehicle to instantly log in, complete safety checks, and start their shift. No paperwork. No delays.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-satellite-dish"></i></div>
+                    <h3>Live Mission Control</h3>
+                    <p>Watch your fleet in real-time. Track active shifts, destinations, driver check-ins, and live telemetry from a centralized dashboard.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-wrench"></i></div>
+                    <h3>Proactive Mechanics</h3>
+                    <p>Before a vehicle leaves the yard, mechanic approvals ensure complete safety. Track lifetime maintenance costs down to the cent.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-1">
+            <h1 class="page-title">Forensic Fuel Auditing</h1>
+            <div class="page-subtitle">Catch fuel theft with mathematics</div>
+            <p class="content-text">
+                Fuel is one of the highest expenses in any fleet, making it a prime target for internal theft. FleetTrack’s proprietary algorithm combines shift logs with fuel slips to isolate missing fuel.
+            </p>
+
+            <div class="demo-box">
+                <h3 style="margin-bottom: 20px; color: #ffb74d;"><i class="fas fa-eye"></i> Live Simulation: The Anomaly Trap</h3>
+                <p style="margin-bottom: 20px; color: #ccc;">FleetTrack scans all fuel brackets for mathematically impossible fill-ups. See how it catches a diverter:</p>
+                
+                <div class="fraud-alert">
+                    <h3 style="margin-bottom: 10px; font-weight: 800; text-transform: uppercase;">
+                        <i class="fas fa-siren-on"></i> IMPOSSIBLE FILL-UP DETECTED: SMA 001 GP
+                    </h3>
+                    <p style="color: #333; font-weight: 500;">
+                        This vehicle only travelled <strong>45 km</strong> since its last full tank.<br><br>
+                        It is mathematically impossible for it to take in <strong>50 Litres</strong> to reach full capacity again. Fuel was diverted into external containers.<br><br>
+                        <strong>Investigate Driver: John Doe immediately.</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-2">
+            <h1 class="page-title">The Financial Lab</h1>
+            <div class="page-subtitle">Super-Admin Business Intelligence</div>
+            <p class="content-text">
+                FleetTrack doesn't just track cars; it tracks your money. Built specifically for owners and executives, our BI tools provide granular insight into fleet profitability.
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card" style="border-top: 4px solid var(--primary);">
+                    <h3 style="color: var(--primary);">Cost Per Kilometre (CPK)</h3>
+                    <p>Stop guessing your margins. FleetTrack calculates the exact CPK based on actual fuel logs and precise odometer tracking, updating in real-time.</p>
+                </div>
+                <div class="feature-card" style="border-top: 4px solid var(--accent);">
+                    <h3 style="color: var(--accent);">Bulk Fuel Tracking</h3>
+                    <p>Don't lose track of your off-road fuel. Dedicated tracking for Forklifts, Generators, and spare cans ensures every drop is accounted for.</p>
+                </div>
+                <div class="feature-card" style="border-top: 4px solid var(--success);">
+                    <h3 style="color: var(--success);">Amortization Forecast</h3>
+                    <p>Track which vehicles are fully paid off and which are bank-financed. Use the "Cheat Codes" calculator to see how fast you can beat bank interest.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-3">
+            <h1 class="page-title">Built for the Road</h1>
+            <div class="page-subtitle">The Mobile Driver Experience</div>
+            <p class="content-text">
+                A system is only as good as the data entered into it. We made the driver experience completely frictionless.
+            </p>
+            
+            <div style="display: flex; gap: 40px; align-items: center; margin-top: 40px;">
+                <div style="flex: 1; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="margin-bottom: 20px; color: var(--accent);"><i class="fas fa-list-ol"></i> The Workflow</h3>
+                    <ol style="line-height: 2.5; font-size: 18px; color: #444; padding-left: 20px; font-weight: 500;">
+                        <li><strong>Scan:</strong> Driver scans QR code on truck.</li>
+                        <li><strong>Inspect:</strong> Digital 7-point safety check.</li>
+                        <li><strong>Start:</strong> Enter starting ODO and destination.</li>
+                        <li><strong>Drive:</strong> GPS telemetry sent to Mission Control.</li>
+                        <li><strong>Finish:</strong> End shift and generate digital logbook.</li>
+                    </ol>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <i class="fas fa-qrcode" style="font-size: 150px; color: #111; opacity: 0.1;"></i>
+                    <h2 style="margin-top: 20px; color: #111;">Zero Paperwork.</h2>
+                    <p style="color: #666; margin-top: 10px;">Export fully compliant PDF Logbooks with one click.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="page-4">
+            <div style="text-align: center; margin-top: 10vh;">
+                <i class="fas fa-paw" style="font-size: 80px; color: var(--primary); margin-bottom: 30px;"></i>
+                <h1 class="page-title">Ready to modernize your fleet?</h1>
+                <p class="content-text" style="max-width: 600px; margin: 0 auto 40px auto;">
+                    Take back control of your vehicles, eradicate fuel theft, and run your logistics with military precision.
+                </p>
+                <button class="btn-main" onclick="alert('Contacting Sales Team...')">
+                    <i class="fas fa-envelope"></i> Request a Live Demo
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    // Simple JavaScript to handle the "Page Turning" interactivity
+    function turnPage(pageIndex) {
+        // 1. Update Sidebar Active State
+        const links = document.querySelectorAll('.chapter-link');
+        links.forEach(link => link.classList.remove('active'));
+        links[pageIndex].classList.add('active');
+
+        // 2. Update Pages Active State (Fade/Slide Animation)
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => page.classList.remove('active'));
+        document.getElementById(`page-${pageIndex}`).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
